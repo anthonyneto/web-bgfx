@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Cache emscripten
+      uses: actions/cache@v2
+      with:
+        path: /root/.emscripten_cache
+        key: ${{ runner.os }}-emscripten-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-emscripten-
+
+    - name: Run Emscripten build
+      uses: docker://emscripten/emsdk:latest
+      run: |
+        emsdk install latest
+        emsdk activate latest
+        mkdir build
+        cd build
+        emcmake cmake ..
+        emmake make

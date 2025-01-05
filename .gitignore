@@ -1,0 +1,15 @@
+# Ignore build directory
+build/
+
+# Ignore bgfx submodule
+bgfx.cmake/
+
+# Ignore other common files
+*.log
+*.tmp
+*.swp
+*.bak
+*.old
+*.orig
+.DS_Store
+Thumbs.db
